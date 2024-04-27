@@ -62,7 +62,7 @@ function! HugoPost(title)
     echo "Making that post " . file_name
     exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
 
-    let template = ["---", "title: \"" . title . "\"", "description: ", "date: " . created, "draft: true", "tags: ", "  - "]
+    let template = ["---", "title: \"" . title . "\"", "description: ", "date: " . created, "tldr: ", "draft: true", "tags: ", "  - "]
     call extend(template,["---", ""])
 
     let err = append(0, template)
