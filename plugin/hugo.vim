@@ -20,7 +20,7 @@ if ! exists('g:hugo_post_dirs')
 endif
 
 if !exists('g:hugo_post_suffix')
-  let g:hugo_post_suffix = "markdown"
+  let g:hugo_post_suffix = "md"
 endif
 
 if !exists('g:hugo_title_pattern')
