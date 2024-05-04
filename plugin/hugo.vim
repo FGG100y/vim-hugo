@@ -56,19 +56,21 @@ function! HugoPost(title)
   let title = a:title
   if title == ''
     let title = input("Post title: ")
-  endif
-  if title != ''
+    let file_name = "index" . "." . g:hugo_post_suffix
+    let g:hugo_post_dirs = fnamemodify(getcwd(), ':p')
+    echo "Making that post " . file_name
+    exe "e " . g:hugo_post_dirs . file_name
+  else
     let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:hugo_post_suffix
     echo "Making that post " . file_name
     exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
-
-    let template = ["---", "title: \"" . title . "\"", "description: ", "date: " . created, "tldr: ", "draft: true", "tags: ", "  - "]
-    call extend(template,["---", ""])
-
-    let err = append(0, template)
-  else
-    call s:error("You must specify a title")
   endif
+
+  let template = ["---", "title: \"" . title . "\"", "description: ", "date: " . created, "draft: true", "tags: []"]
+  call extend(template,["---", ""])
+
+  let err = append(0, template)
+
 endfunction
 command! -nargs=? HugoPost :call HugoPost(<q-args>)
 
