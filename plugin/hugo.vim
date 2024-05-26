@@ -1,8 +1,9 @@
 " hugo.vim
-" Author:  Denis Evsyukov <denis@evsyukov.org>
-" URL:     https://github.com/juev/vim-hugo
-" Version: 0.1.0
+" Author:  fmh (brantvan49@outlook.com)
+" Version: 0.1.1
 " License: Same as Vim itself (see :help license)
+
+" original repo URL:     https://github.com/juev/vim-hugo
 
 if exists('g:loaded_hugo') || &cp || v:version < 700
   finish
@@ -51,7 +52,7 @@ endfunction
 
 " Post functions {{{
 
-function! HugoPost(title)
+function! HugoPost2(title)
   let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00
   let title = a:title
   if title == ''
@@ -66,12 +67,59 @@ function! HugoPost(title)
     exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
   endif
 
-  let template = ["---", "title: \"" . title . "\"", "description: ", "date: " . created, "draft: true", "tags: []"]
+  " the front matters:
+  let template = ["---", "title: \"" . title . "\"", "summary: ", "description: ", "date: " . created, "draft: true", "tags: []"]
   call extend(template,["---", ""])
 
   let err = append(0, template)
-
 endfunction
+
+command! -nargs=? HugoPost2 :call HugoPost2(<q-args>)
+
+function! HugoPost(filename)
+  " Parse the input filename into directory, name, and extension
+  let dir_name = fnamemodify(a:filename, ':h')
+  let file_name = fnamemodify(a:filename, ':t:r')
+  let file_ext = fnamemodify(a:filename, ':e')
+  
+  " If no extension is provided, use the default Hugo post suffix
+  if file_ext == ''
+    let file_ext = g:hugo_post_suffix
+  endif
+  
+  " Create the full file path
+  let full_path = dir_name . '/' . file_name . '.' . file_ext
+
+  " Ensure the directory exists
+  if !isdirectory(dir_name)
+    call mkdir(dir_name, "p")
+  endif
+  
+  " Echo the action being performed
+  echo "Making that post " . full_path
+  
+  " Open the file for editing
+  exe "e " . full_path
+
+  " Create the front matter template
+  " Get the current date and time
+  let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00
+  let template = [
+        \ "---",
+        \ "title: \"" . file_name . "\"",
+        \ "summary: ",
+        \ "description: ",
+        \ "date: " . created,
+        \ "draft: true",
+        \ "tags: []",
+        \ "---",
+        \ ""
+        \ ]
+  
+  " Append the template to the file
+  let err = append(0, template)
+endfunction
+
 command! -nargs=? HugoPost :call HugoPost(<q-args>)
 
 " }}}
