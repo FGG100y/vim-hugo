@@ -52,29 +52,29 @@ endfunction
 
 " Post functions {{{
 
-function! HugoPost2(title)
-  let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00{{{
-  let title = a:title
-  if title == ''
-    let title = input("Post title: ")
-    let file_name = "index" . "." . g:post_file_ext
-    let g:hugo_post_dirs = fnamemodify(getcwd(), ':p')
-    echo "Making that post " . file_name
-    exe "e " . g:hugo_post_dirs . file_name
-  else
-    let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:post_file_ext
-    echo "Making that post " . file_name
-    exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
-  endif
-
-  " the front matters:
-  let template = ["---", "title: \"" . title . "\"", "summary: ", "description: ", "date: " . created, "draft: true", "tags: []"]
-  call extend(template,["---", ""])
-
-  let err = append(0, template)"}}}
-endfunction
-
-command! -nargs=? HugoPost2 :call HugoPost2(<q-args>)
+" function! HugoPost2(title)
+"   let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00{{{
+"   let title = a:title
+"   if title == ''
+"     let title = input("Post title: ")
+"     let file_name = "index" . "." . g:post_file_ext
+"     let g:hugo_post_dirs = fnamemodify(getcwd(), ':p')
+"     echo "Making that post " . file_name
+"     exe "e " . g:hugo_post_dirs . file_name
+"   else
+"     let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:post_file_ext
+"     echo "Making that post " . file_name
+"     exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
+"   endif
+"
+"   " the front matters:
+"   let template = ["---", "title: \"" . title . "\"", "summary: ", "description: ", "date: " . created, "draft: true", "tags: []"]
+"   call extend(template,["---", ""])
+"
+"   let err = append(0, template)"}}}
+" endfunction
+"
+" command! -nargs=? HugoPost2 :call HugoPost2(<q-args>)
 
 function! HugoPost(filename)
   let filename = a:filename
