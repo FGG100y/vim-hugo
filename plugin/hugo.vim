@@ -20,8 +20,8 @@ if ! exists('g:hugo_post_dirs')
   let g:hugo_post_dirs = "/content/posts/"
 endif
 
-if !exists('g:hugo_post_suffix')
-  let g:hugo_post_suffix = "md"
+if !exists('g:post_file_ext')
+  let g:post_file_ext = "md"
 endif
 
 if !exists('g:hugo_title_pattern')
@@ -53,16 +53,16 @@ endfunction
 " Post functions {{{
 
 function! HugoPost2(title)
-  let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00
+  let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00{{{
   let title = a:title
   if title == ''
     let title = input("Post title: ")
-    let file_name = "index" . "." . g:hugo_post_suffix
+    let file_name = "index" . "." . g:post_file_ext
     let g:hugo_post_dirs = fnamemodify(getcwd(), ':p')
     echo "Making that post " . file_name
     exe "e " . g:hugo_post_dirs . file_name
   else
-    let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:hugo_post_suffix
+    let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:post_file_ext
     echo "Making that post " . file_name
     exe "e " . g:hugo_path . g:hugo_post_dirs . file_name
   endif
@@ -71,42 +71,56 @@ function! HugoPost2(title)
   let template = ["---", "title: \"" . title . "\"", "summary: ", "description: ", "date: " . created, "draft: true", "tags: []"]
   call extend(template,["---", ""])
 
-  let err = append(0, template)
+  let err = append(0, template)"}}}
 endfunction
 
 command! -nargs=? HugoPost2 :call HugoPost2(<q-args>)
 
 function! HugoPost(filename)
-  " Parse the input filename into directory, name, and extension
-  let dir_name = fnamemodify(a:filename, ':h')
-  let file_name = fnamemodify(a:filename, ':t:r')
-  let file_ext = fnamemodify(a:filename, ':e')
-  
-  " If no extension is provided, use the default Hugo post suffix
-  if file_ext == ''
-    let file_ext = g:hugo_post_suffix
-  endif
-  
-  " Create the full file path
-  let full_path = dir_name . '/' . file_name . '.' . file_ext
+  let filename = a:filename
+  if filename == ''
+    let g:hugo_post_dirs = fnamemodify(getcwd(), ':p')
+    let title = input("Post title: ")
+    let file_name = strftime("%Y-%m-%d-") . s:esctitle(title) . "." . g:post_file_ext
+    echo "Making that post " . file_name
+    exe "e " . g:hugo_post_dirs . file_name
+  else
+    " Parse the input filename into directory, name, and extension
+    let dir_name = fnamemodify(a:filename, ':h')
+    let file_name = fnamemodify(a:filename, ':t:r')
+    let file_ext = fnamemodify(a:filename, ':e')
+    if file_name == 'index'
+      let title = dir_name
+    else
+      let title = file_name
+    endif
+    
+    " If no extension is provided, use the default Hugo post suffix
+    if file_ext == ''
+      let file_ext = g:post_file_ext
+    endif
+    
+    " Create the full file path
+    let full_path = dir_name . '/' . file_name . '.' . file_ext
 
-  " Ensure the directory exists
-  if !isdirectory(dir_name)
-    call mkdir(dir_name, "p")
+    " Ensure the directory exists
+    if !isdirectory(dir_name)
+      call mkdir(dir_name, "p")
+    endif
+    
+    " Echo the action being performed
+    echo "Making that post " . full_path
+    
+    " Open the file for editing
+    exe "e " . full_path
   endif
-  
-  " Echo the action being performed
-  echo "Making that post " . full_path
-  
-  " Open the file for editing
-  exe "e " . full_path
 
   " Create the front matter template
   " Get the current date and time
   let created = strftime("%FT%T%z") " 2019-10-24T08:56:12+03:00
   let template = [
         \ "---",
-        \ "title: \"" . file_name . "\"",
+        \ "title: \"" . title . "\"",
         \ "summary: ",
         \ "description: ",
         \ "date: " . created,
