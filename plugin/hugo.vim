@@ -94,12 +94,12 @@ function! HugoPost(filename)
     else
       let title = file_name
     endif
-    
+
     " If no extension is provided, use the default Hugo post suffix
     if file_ext == ''
       let file_ext = g:post_file_ext
     endif
-    
+
     " Create the full file path
     let full_path = dir_name . '/' . file_name . '.' . file_ext
 
@@ -107,10 +107,10 @@ function! HugoPost(filename)
     if !isdirectory(dir_name)
       call mkdir(dir_name, "p")
     endif
-    
+
     " Echo the action being performed
     echo "Making that post " . full_path
-    
+
     " Open the file for editing
     exe "e " . full_path
   endif
@@ -121,15 +121,15 @@ function! HugoPost(filename)
   let template = [
         \ "---",
         \ "title: \"" . title . "\"",
-        \ "summary: ",
-        \ "description: ",
+        \ "summary:",
+        \ "description:",
         \ "date: " . created,
         \ "draft: true",
         \ "tags: []",
         \ "---",
         \ ""
         \ ]
-  
+
   " Append the template to the file
   let err = append(0, template)
 endfunction
