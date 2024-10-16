@@ -68,7 +68,7 @@ endfunction
 "   endif
 "
 "   " the front matters:
-"   let template = ["---", "title: \"" . title . "\"", "summary: ", "description: ", "date: " . created, "draft: true", "tags: []"]
+"   let template = ["---", "title: \"" . title . "\"", "summary: ", "date: " . created, "draft: true", "tags: []"]
 "   call extend(template,["---", ""])
 "
 "   let err = append(0, template)"}}}
