@@ -122,7 +122,6 @@ function! HugoPost(filename)
         \ "---",
         \ "title: \"" . title . "\"",
         \ "summary:",
-        " \ "description:",
         \ "date: " . created,
         \ "draft: true",
         \ "tags: []",
